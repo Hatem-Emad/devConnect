@@ -1,3 +1,4 @@
 {
-    "mongoURI": "mongodb+srv://Hatem:hatem@devconnect.mqbdpzf.mongodb.net/test"
+    "mongoURI": "mongodb+srv://Hatem:hatem@devconnect.mqbdpzf.mongodb.net/test",
+    "jwtToken": "mysecretoken"
 }
