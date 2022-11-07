@@ -8,7 +8,7 @@ const bcrypt = require('bcryptjs')
 const { check, validationResult } = require('express-validator')
 
 // route    GET api/auth
-// desc     Test route
+// desc     Find a user by id
 // access   Public
 router.get('/', auth, async(req,res) => {
     try {
@@ -65,7 +65,7 @@ router.post(
             jwt.sign(
                 payload,
                 config.get('jwtToken'), 
-                {expiresIn: 360000},
+                {expiresIn: 3600},
                 (err, token) => {
                     if(err) throw err;
                     res.json({token});

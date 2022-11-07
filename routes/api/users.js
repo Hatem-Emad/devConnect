@@ -2,13 +2,20 @@ const express = require('express')
 const router = express.Router();
 const { check, validationResult } = require('express-validator')
 const User = require('../../modles/User')
+const Profile = require('../../modles/Profile')
+const Post = require('../../modles/Post')
 const  gravatar = require('gravatar')
 const jwt = require('jsonwebtoken')
 const bcrypt = require('bcryptjs')
 const config = require('config')
+const auth = require('../../middleware/auth');
+
 
 router.get('/', (req,res) => res.send('Users route'));
 
+//route     POST api/users
+//desc      Creat a user
+//access    Public
 router.post('/',
 [
     check('name', 'Name is required')
@@ -73,5 +80,27 @@ async (req,res) => {
     }
   
 });
+
+//route     DELETE api/users
+//desc      Remove a user and his profile
+//access    Public
+router.delete('/', auth, async(req,res) => {
+    try {
+        
+        //remove user
+        const user = await User.findOne({_id: req.user.id})
+
+        if(!user)  return res.status(400).json({msg: 'there is no user'});
+        await Post.deleteMany({user:req.user.id})
+        await Profile.findOneAndRemove({user: req.user.id}) 
+        await User.findOneAndRemove({_id: req.user.id})
+        
+        res.json({msg: 'User removed'})
+        
+    } catch (error) {
+        console.error(error.message);
+        res.status(500).send('Server Error')
+    }
+})
 
 module.exports = router;
